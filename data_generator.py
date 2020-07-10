@@ -49,18 +49,21 @@ class DataGenerator(keras.utils.Sequence):
         X = np.empty((self.batch_size, *self.dim, self.n_channels*self.n_stack))
         y = np.empty((self.batch_size, *self.dim, self.n_channels))
         
-        X += len(list_IDs_temp)
         # Generate data
         for i, ID in enumerate(list_IDs_temp):
             # Store sample
             X_stack = np.empty((*self.dim, self.n_channels*self.n_stack))
             
-            for j in range(self.n_stack):
+            # TODO: better to make list from idx 0 to len-(n_stack)
+            for j in range(-(self.n_stack//2), self.n_stack//2+1):
 
-                X_stack[:,:,self.n_channels*j:self.n_channels*(j+1)] = np.load(os.path.join(input_data_dir, str(int(ID) + j).zfill(8) + '.npy'))
+                X_stack[:,:,self.n_channels*(j+self.n_stack//2):self.n_channels*(j+self.n_stack//2+1)] = np.load(os.path.join(input_data_dir, str(int(ID) + j).zfill(8) + '.npy'))
                 
             # Store class
             X[i,] = X_stack
-            y[i,] = np.load(os.path.join(gt_data_dir, str(int(ID)+self.n_stack//2).zfill(8) + '.npy'))
+            y[i,] = np.load(os.path.join(gt_data_dir, ID + '.npy'))
+
+        X /= 255
+        y /= 255
 
         return X, y

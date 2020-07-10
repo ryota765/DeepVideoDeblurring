@@ -142,7 +142,8 @@ def main(data_path, output_dir, n_stack, crop_num):
         crop_seed = [np.random.randint(0, 100) for i in range(crop_num)]
 
         for num_id, (input_img, gt_img) in enumerate(zip(input_array, gt_array)):
-
+            
+            # TODO: change indexing from 0 to len-n_stack
             id_flag = False if (num_id <= n_stack//2 or num_id >= (len(input_array) - n_stack//2)) else True
             num_id = str(num_id).zfill(3)
 
