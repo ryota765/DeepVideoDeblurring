@@ -27,7 +27,7 @@ def parse_args():
         "--output_dir", type=str, help="path to model output", default="data/output"
     )
     parser.add_argument(
-        "--n_epochs", type=int, help="number of all epochs for training", default=80000
+        "--n_epochs", type=int, help="number of all epochs for training", default=3
     )
     parser.add_argument(
         "--lr", type=float, help="initial learning rate", default=0.005
@@ -67,12 +67,8 @@ def plot_history(history, output_dir):
 
 
 # need to adjust parameters in this function due to keras implementation rule
-def step_decay(epoch, lr=0.005, first_iter=24000, half_iter=8000, min_lr=0.000001):
-    if epoch <= first_iter:
-        return lr
-    else:
-        lr_tmp = lr / (2 ** ((epoch-first_iter)//half_iter))
-        return min(lr_tmp, min_lr)
+def step_decay(epoch, lr=0.005, min_lr=0.000001):
+    return lr / (2**(epoch-1))
 
 
 def train(n_epochs, data_dir, id_dir, output_dir, lr, train_val_split):
