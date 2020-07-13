@@ -1,6 +1,6 @@
 # Implementation of Deep Video Deblurring in Keras
 
-This is a re-implementation code of * [Deep Video Deblurring for Hand-held Cameras](https://openaccess.thecvf.com/content_cvpr_2017/papers/Su_Deep_Video_Deblurring_CVPR_2017_paper.pdf) in Keras.  
+This is a re-implementation code of [Deep Video Deblurring for Hand-held Cameras](https://openaccess.thecvf.com/content_cvpr_2017/papers/Su_Deep_Video_Deblurring_CVPR_2017_paper.pdf) in Keras.  
 Given a stack of pre-aligned input frames, this network predicts a sharper central image.  
 * [Author implementation in matlab](https://github.com/shuochsu/DeepVideoDeblurring)
 
@@ -28,7 +28,7 @@ Your directory should be as shown below.
 
 ### Download datasets
 
-The dataset can be downloaded from * [Github of author implementation](https://github.com/shuochsu/DeepVideoDeblurring).  
+The dataset can be downloaded from [Github of author implementation](https://github.com/shuochsu/DeepVideoDeblurring).  
 This dataset includes frames from 71 videos. (61 for training, 10 for testing)  
 Place the downloaded dataset under data directory as shown below.  
 
