@@ -16,13 +16,22 @@ def parse_args():
         "--data_dir", type=str, help="path to .npy file of input data", default="data"
     )
     parser.add_argument(
-        "--test_id_path", type=str, help="path to test_id_list", default="id_list/test_id.pickle"
+        "--test_id_path",
+        type=str,
+        help="path to test_id_list",
+        default="id_list/test_id.pickle",
     )
     parser.add_argument(
-        "--model_path", type=str, help="path to trained model weights", default="data/output/model_weights.h5"
+        "--model_path",
+        type=str,
+        help="path to trained model weights",
+        default="data/output/model_weights.h5",
     )
     parser.add_argument(
-        "--output_dir", type=str, help="path to output dir", default="data/output/prediction"
+        "--output_dir",
+        type=str,
+        help="path to output dir",
+        default="data/output/prediction",
     )
     parser.add_argument(
         "--batch_size", type=int, help="number of batch for prediction", default=1
@@ -31,12 +40,14 @@ def parse_args():
     return parser.parse_args()
 
 
-def predict(data_dir,test_id_path,model_path,output_dir,batch_size,n_stack=5,n_channels=3):
+def predict(
+    data_dir, test_id_path, model_path, output_dir, batch_size, n_stack=5, n_channels=3
+):
 
-    f = open(os.path.join(data_dir, test_id_path), 'rb')
+    f = open(os.path.join(data_dir, test_id_path), "rb")
     test_id_list = pickle.load(f)[10:20]
 
-    '''
+    """
     test_id_list = ['00160016',
                     '00291057',
                     '00214049',
@@ -57,34 +68,40 @@ def predict(data_dir,test_id_path,model_path,output_dir,batch_size,n_stack=5,n_c
                     '01053093',
                     '01034008',
                     '00182087']
-                    '''
+                    """
 
     os.makedirs(output_dir, exist_ok=True)
 
     model = model_generator.ModelGenerator().model()
     model.load_weights(model_path)
 
-    for i in range(len(test_id_list)//batch_size):
+    for i in range(len(test_id_list) // batch_size):
 
-        X, y = data_generator.load_batch_data(test_id_list[i*batch_size:(i+1)*batch_size], data_dir, batch_size=batch_size)
+        X, y = data_generator.load_batch_data(
+            test_id_list[i * batch_size : (i + 1) * batch_size],
+            data_dir,
+            batch_size=batch_size,
+        )
 
         pred = model.predict(X)
-        
-        X = (X*255).astype(np.uint8)
-        y = (y*255).astype(np.uint8)
-        pred = (pred*255).astype(np.uint8)
-        
-        plt.subplot(1,3,1)
+
+        X = (X * 255).astype(np.uint8)
+        y = (y * 255).astype(np.uint8)
+        pred = (pred * 255).astype(np.uint8)
+
+        plt.subplot(1, 3, 1)
         plt.imshow(y[0])
-        plt.subplot(1,3,2)
-        plt.imshow(X[0][:,:,n_channels*(n_stack//2):n_channels*(n_stack//2+1)])
-        plt.subplot(1,3,3)
+        plt.subplot(1, 3, 2)
+        plt.imshow(
+            X[0][:, :, n_channels * (n_stack // 2) : n_channels * (n_stack // 2 + 1)]
+        )
+        plt.subplot(1, 3, 3)
         plt.imshow(pred[0])
 
-        plt.savefig(os.path.join(output_dir, '{}.png'.format(test_id_list[i])))
+        plt.savefig(os.path.join(output_dir, "{}.png".format(test_id_list[i])))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     args = parse_args()
 

@@ -17,10 +17,16 @@ def parse_args():
         "--data_dir", type=str, help="path to .npy file of input data", default="data"
     )
     parser.add_argument(
-        "--test_id_path", type=str, help="path to test_id_list", default="id_list/test_id.pickle"
+        "--test_id_path",
+        type=str,
+        help="path to test_id_list",
+        default="id_list/test_id.pickle",
     )
     parser.add_argument(
-        "--model_path", type=str, help="path to trained model weights", default="data/output/model_weights.h5"
+        "--model_path",
+        type=str,
+        help="path to trained model weights",
+        default="data/output/model_weights.h5",
     )
     parser.add_argument(
         "--output_dir", type=str, help="path to output dir", default="data/output"
@@ -55,12 +61,22 @@ def draw_histogram(history_list, output_dir, n_bins=16):
     hist_mean_list = [np.mean(row) if len(row) > 0 else 0 for row in hist_list]
 
     plt.plot(bin_list, hist_mean_list)
-    plt.savefig(os.path.join(output_dir, 'histogram.png'))
+    plt.savefig(os.path.join(output_dir, "histogram.png"))
 
 
-def evaluate(data_dir, test_id_path, model_path, output_dir='output', batch_size=16, n_bins=16, dim=(128,128), n_stack=5, n_channels=3):
+def evaluate(
+    data_dir,
+    test_id_path,
+    model_path,
+    output_dir="output",
+    batch_size=16,
+    n_bins=16,
+    dim=(128, 128),
+    n_stack=5,
+    n_channels=3,
+):
 
-    f = open(os.path.join(data_dir, test_id_path), 'rb')
+    f = open(os.path.join(data_dir, test_id_path), "rb")
     test_id_list = pickle.load(f)
 
     model = model_generator.ModelGenerator().model()
@@ -68,25 +84,31 @@ def evaluate(data_dir, test_id_path, model_path, output_dir='output', batch_size
 
     history_list = []
 
-    for i in range(len(test_id_list)//batch_size):
-        X, y = data_generator.load_batch_data(test_id_list[i*batch_size:(i+1)*batch_size], data_dir)
+    for i in range(len(test_id_list) // batch_size):
+        X, y = data_generator.load_batch_data(
+            test_id_list[i * batch_size : (i + 1) * batch_size], data_dir
+        )
         pred = model.predict(X)
-        
-        X = (X*255).astype(np.uint8)
-        y = (y*255).astype(np.uint8)
-        pred = (pred*255).astype(np.uint8)
 
-        for gt_img, input_img, pred_img, in zip(y, X[:,:,:,n_channels*(n_stack//2):n_channels*(n_stack//2+1)], pred):
-            input_psnr = cv2.PSNR(gt_img, input_img) # only accepts uint8
+        X = (X * 255).astype(np.uint8)
+        y = (y * 255).astype(np.uint8)
+        pred = (pred * 255).astype(np.uint8)
+
+        for gt_img, input_img, pred_img, in zip(
+            y,
+            X[:, :, :, n_channels * (n_stack // 2) : n_channels * (n_stack // 2 + 1)],
+            pred,
+        ):
+            input_psnr = cv2.PSNR(gt_img, input_img)  # only accepts uint8
             pred_psnr = cv2.PSNR(gt_img, pred_img)
-            history_list.append([input_psnr, pred_psnr-input_psnr])
+            history_list.append([input_psnr, pred_psnr - input_psnr])
 
     draw_histogram(history_list, output_dir, n_bins)
 
     return
 
-    
-if __name__ == '__main__':
+
+if __name__ == "__main__":
 
     args = parse_args()
 
@@ -98,10 +120,3 @@ if __name__ == '__main__':
         batch_size=args.batch_size,
         n_bins=args.n_bins,
     )
-    
-
-        
-
-    
-
-
