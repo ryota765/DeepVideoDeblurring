@@ -66,8 +66,10 @@ python train.py --n_epochs=4
 
 ### Prediction
 
+Generate clear image using weights of a trained model.  
+
 ```
-On going...
+python predict.py --data_dir=data --model_path=data/output/model_weights.h5
 ```
 
 ### Evaluation
@@ -77,7 +79,6 @@ Figure of evaluation results will be generated under data/output directory.
 
 ```
 python evaluation.py
-still on going...
 ```
 
 ## Author
