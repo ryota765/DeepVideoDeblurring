@@ -6,17 +6,21 @@ import numpy as np
 import pickle
 import matplotlib.pyplot as plt
 
+from utils import data_generator
 from utils import model_generator
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Parameter for training.")
+    parser = argparse.ArgumentParser(description="Parameter for evaluation.")
 
     parser.add_argument(
         "--data_dir", type=str, help="path to .npy file of input data", default="data"
     )
     parser.add_argument(
         "--test_id_path", type=str, help="path to test_id_list", default="id_list/test_id.pickle"
+    )
+    parser.add_argument(
+        "--model_path", type=str, help="path to trained model weights", default="data/output/model_weights.h5"
     )
     parser.add_argument(
         "--output_dir", type=str, help="path to output dir", default="data/output"
@@ -29,34 +33,6 @@ def parse_args():
     )
 
     return parser.parse_args()
-
-def load_batch_data(list_IDs_temp, data_dir, batch_size=16, dim=(128,128), n_channels=3, n_stack=5):
-    'Generates data containing batch_size samples' # X : (n_samples, *dim, n_channels)
-
-    input_data_dir = os.path.join(data_dir, 'input_data')
-    gt_data_dir = os.path.join(data_dir, 'gt_data')
-
-    # Initialization
-    X = np.empty((batch_size, *dim, n_channels*n_stack))
-    y = np.empty((batch_size, *dim, n_channels))
-
-    # Generate data
-    for i, ID in enumerate(list_IDs_temp):
-        # Store sample
-        X_stack = np.empty((*dim, n_channels*n_stack))
-
-        for j in range(-(n_stack//2), n_stack//2+1):
-
-            X_stack[:,:,n_channels*(j+n_stack//2):n_channels*(j+n_stack//2+1)] = np.load(os.path.join(input_data_dir, str(int(ID) + j).zfill(8) + '.npy'))
-
-        # Store class
-        X[i,] = X_stack
-        y[i,] = np.load(os.path.join(gt_data_dir, ID + '.npy'))
-
-    X /= 255
-    y /= 255
-
-    return X, y
 
 
 def draw_histogram(history_list, output_dir, n_bins=16):
@@ -82,17 +58,18 @@ def draw_histogram(history_list, output_dir, n_bins=16):
     plt.savefig(os.path.join(output_dir, 'histogram.png'))
 
 
-def evaluate(data_dir, test_id_path, output_dir='output', batch_size=16, n_bins=16, dim=(128,128), n_stack=5, n_channels=3):
+def evaluate(data_dir, test_id_path, model_path, output_dir='output', batch_size=16, n_bins=16, dim=(128,128), n_stack=5, n_channels=3):
 
     f = open(os.path.join(data_dir, test_id_path), 'rb')
     test_id_list = pickle.load(f)
 
     model = model_generator.ModelGenerator().model()
+    model.load_weights(model_path)
 
     history_list = []
 
     for i in range(len(test_id_list)//batch_size):
-        X, y = load_batch_data(test_id_list[i*16:(i+1)*16], data_dir)
+        X, y = data_generator.load_batch_data(test_id_list[i*batch_size:(i+1)*batch_size], data_dir)
         pred = model.predict(X)
         
         X = (X*255).astype(np.uint8)
@@ -116,6 +93,7 @@ if __name__ == '__main__':
     evaluate(
         data_dir=args.data_dir,
         test_id_path=args.test_id_path,
+        model_path=args.model_path,
         output_dir=args.output_dir,
         batch_size=args.batch_size,
         n_bins=args.n_bins,

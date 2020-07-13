@@ -26,7 +26,7 @@ def parse_args():
         "--output_dir", type=str, help="path to model output", default="data/output"
     )
     parser.add_argument(
-        "--n_epochs", type=int, help="number of all epochs for training", default=3
+        "--n_epochs", type=int, help="number of all epochs for training", default=4
     )
     parser.add_argument(
         "--lr", type=float, help="initial learning rate", default=0.005

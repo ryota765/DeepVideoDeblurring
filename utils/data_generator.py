@@ -67,3 +67,32 @@ class DataGenerator(keras.utils.Sequence):
         y /= 255
 
         return X, y
+
+
+def load_batch_data(list_IDs_temp, data_dir='data', batch_size=16, dim=(128,128), n_channels=3, n_stack=5):
+    'Generates data containing batch_size samples' # X : (n_samples, *dim, n_channels)
+
+    input_data_dir = os.path.join(data_dir, 'input_data')
+    gt_data_dir = os.path.join(data_dir, 'gt_data')
+
+    # Initialization
+    X = np.empty((batch_size, *dim, n_channels*n_stack))
+    y = np.empty((batch_size, *dim, n_channels))
+
+    # Generate data
+    for i, ID in enumerate(list_IDs_temp):
+        # Store sample
+        X_stack = np.empty((*dim, n_channels*n_stack))
+
+        for j in range(-(n_stack//2), n_stack//2+1):
+
+            X_stack[:,:,n_channels*(j+n_stack//2):n_channels*(j+n_stack//2+1)] = np.load(os.path.join(input_data_dir, str(int(ID) + j).zfill(8) + '.npy'))
+
+        # Store class
+        X[i,] = X_stack
+        y[i,] = np.load(os.path.join(gt_data_dir, ID + '.npy'))
+
+    X /= 255
+    y /= 255
+
+    return X, y
