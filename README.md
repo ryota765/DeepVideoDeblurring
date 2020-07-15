@@ -91,6 +91,15 @@ Figure of evaluation results will be generated under data/output directory.
 python evaluation.py
 ```
 
+### Generate Blurred Images
+
+Blurred image can be generated from a movie using this script.  
+Original paper made use of optical flow interpolation to generate smoother blurred images, which is still not implemented in this script.
+
+```
+python blurred_image_generator.py --movie_path=blur_data/IMG_2307.mov
+```
+
 ## Author
 
 * **Ryota Nomura** - *Initial work* - [HomePage](http://ryota-n.info/)
