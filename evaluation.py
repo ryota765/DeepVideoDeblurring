@@ -26,7 +26,7 @@ def parse_args():
         "--model_path",
         type=str,
         help="path to trained model weights",
-        default="data/output/model_weights.h5",
+        default="data/output/model_deblur.h5",
     )
     parser.add_argument(
         "--output_dir", type=str, help="path to output dir", default="data/output"

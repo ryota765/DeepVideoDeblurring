@@ -83,7 +83,7 @@ def train(n_epochs, data_dir, id_dir, output_dir, lr, train_val_split):
     val_gen = data_generator.DataGenerator(train_IDs[:val_idx], data_dir)
     train_gen = data_generator.DataGenerator(train_IDs[val_idx:], data_dir)
 
-    model_save_path = os.path.join(output_dir, "model_weights.h5")
+    model_save_path = os.path.join(output_dir, "model_deblur.h5")
     model_checkpoint = keras.callbacks.ModelCheckpoint(
         filepath=model_save_path,
         monitor="val_loss",
