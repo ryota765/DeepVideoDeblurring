@@ -104,8 +104,8 @@ def train(n_epochs, data_dir, id_dir, output_dir, lr, train_val_split):
         callbacks=[model_checkpoint, lr_decay],
     )
 
-    history = model.history
-    plot_history(history, output_dir)
+    # history = model.history
+    # plot_history(history, output_dir)
 
     return
 

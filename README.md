@@ -68,8 +68,7 @@ python preprocess.py
 ### Training
 
 Training the model is done by this script.  
-Check out several flags which is available in train.py
-Figure of training history will be generated under data/output directory.  
+Check out several flags which is available in train.py  
 
 ```
 python train.py --n_epochs=4 
