@@ -43,6 +43,17 @@ data/
 - output
 ```
 
+### Download trained model weight
+
+If you want to make use of pre-trained model weight, the weight file can be downloaded from link below.  
+[Pre-trained model weight file](https://drive.google.com/file/d/1P7vijviZzYRQYntlJY6D8g_9gN5wetXA/view?usp=sharing)  
+
+Set the downloaded file under output directory.  
+```
+- output
+-- model_deblur.h5
+```
+
 ## Running the code
 
 ### Preprocessing
