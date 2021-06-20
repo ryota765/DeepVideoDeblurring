@@ -102,7 +102,7 @@ python blurred_image_generator.py --movie_path=blur_data/IMG_2307.mov
 
 ## Author
 
-* **Ryota Nomura** - *Initial work* - [HomePage](http://ryota-n.info/)
+* **Ryota Nomura** - *Initial work* - [HomePage](https://ryota765.github.io/)
 
 
 ## Acknowledgments
